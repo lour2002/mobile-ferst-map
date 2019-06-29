@@ -30,6 +30,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.4"
+    "@babel/polyfill": "^7.4.4",
+    "mapbox-gl": "^1.0.0"
   }
 }
