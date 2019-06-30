@@ -1,4 +1,5 @@
 const HtmlPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: ['@babel/polyfill','./src/index.js'],
@@ -12,7 +13,10 @@ module.exports = {
     plugins:[
         new HtmlPlugin({
             filename: 'index.html',
-            template: './src/index.html'
+            template: './src/index.html',
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'style.css'
         })
     ],
     resolve: {
@@ -20,7 +24,15 @@ module.exports = {
     },
     module: {
         rules: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'}
+          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+          {                
+            test: [/.css$|.scss$/],                
+            use:[
+                MiniCssExtractPlugin.loader,                    
+                'css-loader',
+                'sass-loader'
+            ]               
+          }
         ]
     }
 }
