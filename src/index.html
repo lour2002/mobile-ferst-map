@@ -8,6 +8,16 @@
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body>
-    
+    <div class="o-interface">
+        <div class="a-notice">Нажми на чекин, что бы  увидеть добавленую проблему или создайте новую,нажав на плюс</div>
+        <div class="o-interface__message">
+            <input type="text" name="name" id="js-name-text" class="a-input o-interface__nameInput" placeholder="Имя">
+            <input type="text" name="message" id="js-message-text" size="45" class="a-input o-interface__messageInput" placeholder="Описание проблемы">
+            <button id="js-add-problem">Добавить</button>
+            <div class="a-button -add o-interface__addPoint" id="js-add-point">+</div>
+        </div>
+        
+    </div>
+    <div class="a-map" id="mapbox"></div>
 </body>
 </html>
