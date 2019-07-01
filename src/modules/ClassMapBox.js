@@ -1,5 +1,7 @@
 import mapboxgl from 'mapbox-gl';
-import {MARKER_ICON} from '../constants';
+import {MARKER_ICON_BLUE,
+  MARKER_ICON_GREEN,
+  MARKER_ICON_RED} from '../constants';
 // eslint-disable-next-line max-len
 mapboxgl.accessToken = 'pk.eyJ1IjoibG91cjIwMDIiLCJhIjoiY2p4ajV2dTJjMXgyOTNuczhhZ2E0OWNmOCJ9.6IBMJR_o4Wl886nsWld7BA';
 
@@ -7,7 +9,7 @@ export class ClassMapBox {
   constructor(mapId) {
     if (
       'string' !== typeof mapId ||
-                undefined === document.getElementById(mapId)
+      undefined === document.getElementById(mapId)
     ) {
       throw new Error(`Can't find container by id: ${mapId}`);
     }
@@ -33,21 +35,30 @@ export class ClassMapBox {
         'data': this.pointsData,
       });
 
-      this.map.loadImage(`${MARKER_ICON}`, (error, image) => {
-        this.map.addImage('marker', image);
+      this.map.loadImage(`${MARKER_ICON_RED}`, (error, image) => {
+        this.map.addImage('marker-red', image);
 
         this.map.addLayer({
           'id': 'problems',
           'type': 'symbol',
           'source': 'problemsjson',
           'layout': {
-            'icon-image': 'marker',
+            'icon-image': 'marker-red',
             'icon-size': 0.25,
             'icon-padding': 10,
             'icon-anchor': 'bottom',
           },
         });
       });
+
+      this.map.loadImage(`${MARKER_ICON_BLUE}`, (error, image) => {
+        this.map.addImage('marker-blue', image);
+      });
+
+      this.map.loadImage(`${MARKER_ICON_GREEN}`, (error, image) => {
+        this.map.addImage('marker-green', image);
+      });
+
 
       axios.post('//mc.yarche.work/map/ajax-get-points/', {})
           .then(({data}) => {
@@ -79,9 +90,9 @@ export class ClassMapBox {
             }
           });
 
+      this.updateLayout();
 
       this.map.on('click', 'problems', (e) => {
-        console.log(e.features);
         this.map.flyTo({center: e.features[0].geometry.coordinates});
       });
 
@@ -134,16 +145,20 @@ export class ClassMapBox {
 
   initClickEvent(nameElement, messageElement) {
     this.map.on('click', 'problems', (e) => {
-      const {name, message} = e.features[0].properties;
-      if (undefined !== nameElement && undefined !== name) {
-        nameElement.value = name;
-      }
-      if (undefined !== messageElement && undefined !== message) {
-        messageElement.value = message;
+      if ( e.features/length) {
+        const {name, message} = e.features[0].properties;
+        if (undefined !== nameElement && undefined !== name) {
+          nameElement.value = name;
+        }
+        if (undefined !== messageElement && undefined !== message) {
+          messageElement.value = message;
+        }
       }
     });
   }
   updateLayout() {
-    this.map.getSource('problemsjson').setData(this.pointsData);
+    if (this.map.getSource('problemsjson')) {
+      this.map.getSource('problemsjson').setData(this.pointsData);
+    }
   }
 }
