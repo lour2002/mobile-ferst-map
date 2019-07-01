@@ -1,7 +1,8 @@
 /* Styles */
 import './styles.scss';
 
-import {Map} from './modules/ClassMap';
+import {ClassMapBox} from './modules/ClassMapBox';
+import {ClassProblemInfo} from './modules/ClassProblemInfo';
 import {LS_POINTS_NAME} from './constants';
 
 let wol = () => {};
@@ -13,12 +14,18 @@ if (window.onload != null) {
 window.onload = () => {
   wol.call();
 
-  const map = new Map('mapbox');
+  const Map = new ClassMapBox('mapbox');
+  const ProblemInfo = new ClassProblemInfo();
 
-  document.getElementById('js-add-point')
-      .addEventListener('click', () => map.addPoint() );
+  ProblemInfo.disabled();
+
+  document.getElementById('js-add-point').addEventListener('click', () => {
+    ProblemInfo.enabled();
+    Map.addPoint();
+  });
   document.getElementById('js-add-problem').addEventListener('click', () => {
-    const LngLat = map.newPointLngLat;
+    ProblemInfo.disabled();
+    const LngLat = Map.newPointLngLat;
 
     if (LngLat.length) {
       let points = localStorage.getItem(LS_POINTS_NAME);
@@ -27,8 +34,8 @@ window.onload = () => {
       if (null === points) {
         points = [{
           coordinates: LngLat,
-          name: 'Name',
-          message: 'Message',
+          name: ProblemInfo.nameElement.value,
+          message: ProblemInfo.messageElement.value,
         }];
         localStorage.setItem(LS_POINTS_NAME, JSON.stringify(points));
       } else if ('string' === typeof points && points.length) {
@@ -36,21 +43,20 @@ window.onload = () => {
           points = JSON.parse(points);
           points.push({
             coordinates: LngLat,
-            name: 'Name',
-            message: 'Message',
+            name: ProblemInfo.nameElement.value,
+            message: ProblemInfo.messageElement.value,
           });
           localStorage.setItem(LS_POINTS_NAME, JSON.stringify(points));
         } catch (error) {
           console.error(`Can't get point from localStorage`);
         }
       }
+      Map.addNewPointToLayer({
+        name: ProblemInfo.nameElement.value,
+        message: ProblemInfo.messageElement.value,
+      });
     }
-
-    map.resetNewPoint();
   });
 
-  const nameElement = document.getElementById('js-name-text');
-  const messageElement = document.getElementById('js-message-text');
-
-  map.initClickEvent(nameElement, messageElement);
+  Map.initClickEvent(ProblemInfo.nameElement, ProblemInfo.messageElement);
 };
