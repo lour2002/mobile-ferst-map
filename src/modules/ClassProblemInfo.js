@@ -11,4 +11,8 @@ export class ClassProblemInfo {
     this.nameElement.disabled = false;
     this.messageElement.disabled = false;
   }
+  reset() {
+    this.nameElement.value = '';
+    this.messageElement.value = '';
+  }
 }

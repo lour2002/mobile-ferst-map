@@ -4,6 +4,7 @@ import './styles.scss';
 import {ClassMapBox} from './modules/ClassMapBox';
 import {ClassProblemInfo} from './modules/ClassProblemInfo';
 import {LS_POINTS_NAME} from './constants';
+import axios from 'axios';
 
 let wol = () => {};
 
@@ -20,6 +21,7 @@ window.onload = () => {
   ProblemInfo.disabled();
 
   document.getElementById('js-add-point').addEventListener('click', () => {
+    ProblemInfo.reset();
     ProblemInfo.enabled();
     Map.addPoint();
   });
@@ -28,29 +30,18 @@ window.onload = () => {
     const LngLat = Map.newPointLngLat;
 
     if (LngLat.length) {
-      let points = localStorage.getItem(LS_POINTS_NAME);
+      const point = {
+        coordinates: LngLat,
+        name: ProblemInfo.nameElement.value,
+        message: ProblemInfo.messageElement.value,
+      };
 
-      console.log(points);
-      if (null === points) {
-        points = [{
-          coordinates: LngLat,
-          name: ProblemInfo.nameElement.value,
-          message: ProblemInfo.messageElement.value,
-        }];
-        localStorage.setItem(LS_POINTS_NAME, JSON.stringify(points));
-      } else if ('string' === typeof points && points.length) {
-        try {
-          points = JSON.parse(points);
-          points.push({
-            coordinates: LngLat,
-            name: ProblemInfo.nameElement.value,
-            message: ProblemInfo.messageElement.value,
-          });
-          localStorage.setItem(LS_POINTS_NAME, JSON.stringify(points));
-        } catch (error) {
-          console.error(`Can't get point from localStorage`);
-        }
-      }
+      axios.post('//mc.yarche.work/map/ajax-add-point/', {
+        point,
+      }).then(({data}) => {
+        console.log(data);
+      });
+
       Map.addNewPointToLayer({
         name: ProblemInfo.nameElement.value,
         message: ProblemInfo.messageElement.value,

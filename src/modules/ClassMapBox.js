@@ -5,85 +5,95 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibG91cjIwMDIiLCJhIjoiY2p4ajV2dTJjMXgyOTNuczhhZ
 
 export class ClassMapBox {
   constructor(mapId) {
-    try {
-      if (
-        'string' !== typeof mapId ||
+    if (
+      'string' !== typeof mapId ||
                 undefined === document.getElementById(mapId)
-      ) {
-        throw new Error(`Can't find container by id: ${mapId}`);
-      }
+    ) {
+      throw new Error(`Can't find container by id: ${mapId}`);
+    }
 
-      this.map = new mapboxgl.Map({
-        container: mapId,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [30.6, 50.43],
-        zoom: 10,
-      });
+    this.map = new mapboxgl.Map({
+      container: mapId,
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [30.6, 50.43],
+      zoom: 10,
+    });
 
+    this.newPoint = {};
+
+
+    this.map.on('load', () => {
       this.pointsData = {
         'type': 'FeatureCollection',
         'features': [],
       };
 
-      this.newPoint = {};
+      this.map.addSource('problemsjson', {
+        'type': 'geojson',
+        'data': this.pointsData,
+      });
 
-      let points = localStorage.getItem(LS_POINTS_NAME);
+      this.map.loadImage(`${MARKER_ICON}`, (error, image) => {
+        this.map.addImage('marker', image);
 
-      if (null !== points) {
-        points = JSON.parse(points);
+        this.map.addLayer({
+          'id': 'problems',
+          'type': 'symbol',
+          'source': 'problemsjson',
+          'layout': {
+            'icon-image': 'marker',
+            'icon-size': 0.25,
+            'icon-padding': 10,
+            'icon-anchor': 'bottom',
+          },
+        });
+      });
 
-        this.pointsData.features = points.map((point) => {
-          return {
-            'type': 'Feature',
-            'properties': {
-              'message': point.message,
-              'name': point.name,
-            },
-            'geometry': {
-              'type': 'Point',
-              'coordinates': point.coordinates,
-            },
-          };
-        }),
+      axios.post('//mc.yarche.work/map/ajax-get-points/', {})
+          .then(({data}) => {
+            if (Array.isArray(data.points)) {
+              const points = data.points.map((point) => {
+                const {coordinates, name, message} = JSON.parse(point.data);
+                return {
+                  coordinates,
+                  name,
+                  message,
+                };
+              });
 
-        this.map.on('load', () => {
-          this.map.loadImage(`${MARKER_ICON}`, (error, image) => {
-            this.map.addImage('marker', image);
+              this.pointsData.features = points.map((point) => {
+                return {
+                  'type': 'Feature',
+                  'properties': {
+                    'message': point.message,
+                    'name': point.name,
+                  },
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': point.coordinates,
+                  },
+                };
+              });
 
-            this.map.addSource('problemsjson', {
-              'type': 'geojson',
-              'data': this.pointsData,
-            });
-
-            this.map.addLayer({
-              'id': 'problems',
-              'type': 'symbol',
-              'source': 'problemsjson',
-              'layout': {
-                'icon-image': 'marker',
-                'icon-size': 0.25,
-                'icon-padding': 10,
-                'icon-anchor': 'bottom',
-              },
-            });
+              this.updateLayout();
+            }
           });
-        });
-        this.map.on('click', 'problems', (e) => {
-          console.log(e.features);
-          this.map.flyTo({center: e.features[0].geometry.coordinates});
-        });
-        this.map.on('mouseenter', 'problems', () => {
-          this.map.getCanvas().style.cursor = 'pointer';
-        });
 
-        // Change it back to a pointer when it leaves.
-        this.map.on('mouseleave', 'problems', () => {
-          this.map.getCanvas().style.cursor = '';
-        });
-      }
-    } catch (error) {
-      console.error(error);
-    }
+
+      this.map.on('click', 'problems', (e) => {
+        console.log(e.features);
+        this.map.flyTo({center: e.features[0].geometry.coordinates});
+      });
+
+      this.map.on('mouseenter', 'problems', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      this.map.on('mouseleave', 'problems', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
+    });
   }
   get newPointLngLat() {
     const lngLat = this.newPoint.getLngLat();
@@ -118,7 +128,7 @@ export class ClassMapBox {
 
     this.pointsData.features.push(point);
     this.newPoint.remove();
-    this.map.getSource('problemsjson').setData(this.pointsData);
+    this.updateLayout();
     this.newPoint = {};
   }
 
@@ -132,5 +142,8 @@ export class ClassMapBox {
         messageElement.value = message;
       }
     });
+  }
+  updateLayout() {
+    this.map.getSource('problemsjson').setData(this.pointsData);
   }
 }
