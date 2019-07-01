@@ -29,10 +29,8 @@ export class Map {
 
         this.map.on('load', () => {
           this.map.loadImage(`${MARKER_ICON}`, (error, image) => {
-            console.log(image);
-            const marker = new Image();
-            marker.src = MARKER_ICON;
             this.map.addImage('marker', image);
+
             this.map.addLayer({
               'id': 'problems',
               'type': 'symbol',
@@ -44,7 +42,8 @@ export class Map {
                     return {
                       'type': 'Feature',
                       'properties': {
-                        'description': 'TEXT',
+                        'message': point.message,
+                        'name': point.name,
                       },
                       'geometry': {
                         'type': 'Point',
@@ -62,7 +61,16 @@ export class Map {
           });
         });
         this.map.on('click', 'problems', (e) => {
+          console.log(e.features);
           this.map.flyTo({center: e.features[0].geometry.coordinates});
+        });
+        this.map.on('mouseenter', 'problems', () => {
+          this.map.getCanvas().style.cursor = 'pointer';
+        });
+
+        // Change it back to a pointer when it leaves.
+        this.map.on('mouseleave', 'problems', () => {
+          this.map.getCanvas().style.cursor = '';
         });
       }
     } catch (error) {
@@ -89,5 +97,16 @@ export class Map {
   resetNewPoint() {
     this.newPoint.setDraggable(false);
     this.newPoint = {};
+  }
+  initClickEvent(nameElement, messageElement) {
+    this.map.on('click', 'problems', (e) => {
+      const {name, message} = e.features[0].properties;
+      if (undefined !== nameElement && undefined !== name) {
+        nameElement.value = name;
+      }
+      if (undefined !== messageElement && undefined !== message) {
+        messageElement.value = message;
+      }
+    });
   }
 }
