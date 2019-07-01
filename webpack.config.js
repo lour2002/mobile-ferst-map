@@ -2,37 +2,37 @@ const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-    entry: ['@babel/polyfill','./src/index.js'],
-    output: {
-        path: __dirname + '/dist',
-        filename: 'bundle.js'
-    },
-    devServer: {
-        contentBase: __dirname + '/dist',
-    },
-    plugins:[
-        new HtmlPlugin({
-            filename: 'index.html',
-            template: './src/index.html',
-        }),
-        new MiniCssExtractPlugin({
-            filename: 'style.css'
-        })
+  entry: ['./src/index.js'],
+  output: {
+    path: __dirname + '/dist',
+    filename: 'bundle.js',
+  },
+  devServer: {
+    contentBase: __dirname + '/dist',
+  },
+  plugins: [
+    new HtmlPlugin({
+      filename: 'index.html',
+      template: './src/index.html',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'style.css',
+    }),
+  ],
+  resolve: {
+    extensions: ['.js'],
+  },
+  module: {
+    rules: [
+      {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
+      {
+        test: [/.css$|.scss$/],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
+      },
     ],
-    resolve: {
-        extensions: ['.js']
-    },
-    module: {
-        rules: [
-          { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
-          {                
-            test: [/.css$|.scss$/],                
-            use:[
-                MiniCssExtractPlugin.loader,                    
-                'css-loader',
-                'sass-loader'
-            ]               
-          }
-        ]
-    }
-}
+  },
+};
