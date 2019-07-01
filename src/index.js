@@ -3,8 +3,8 @@ import './styles.scss';
 
 import {ClassMapBox} from './modules/ClassMapBox';
 import {ClassProblemInfo} from './modules/ClassProblemInfo';
-import {LS_POINTS_NAME} from './constants';
-import axios from 'axios';
+
+window.axios = require('axios');
 
 let wol = () => {};
 

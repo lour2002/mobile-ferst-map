@@ -1,5 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import {MARKER_ICON, LS_POINTS_NAME} from '../constants';
+import {MARKER_ICON} from '../constants';
 // eslint-disable-next-line max-len
 mapboxgl.accessToken = 'pk.eyJ1IjoibG91cjIwMDIiLCJhIjoiY2p4ajV2dTJjMXgyOTNuczhhZ2E0OWNmOCJ9.6IBMJR_o4Wl886nsWld7BA';
 
@@ -53,7 +53,7 @@ export class ClassMapBox {
           .then(({data}) => {
             if (Array.isArray(data.points)) {
               const points = data.points.map((point) => {
-                const {coordinates, name, message} = JSON.parse(point.data);
+                const {coordinates, name, message} = point.data;
                 return {
                   coordinates,
                   name,
