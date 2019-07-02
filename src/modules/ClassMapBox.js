@@ -1,7 +1,5 @@
 import mapboxgl from 'mapbox-gl';
-import {MARKER_ICON_BLUE,
-  MARKER_ICON_GREEN,
-  MARKER_ICON_RED} from '../constants';
+import {MAP_MARKER_DEFAULT, MAP_MARKER_SELECT, MAP_MARKER_NEW} from '../constants';
 // eslint-disable-next-line max-len
 mapboxgl.accessToken = 'pk.eyJ1IjoibG91cjIwMDIiLCJhIjoiY2p4ajV2dTJjMXgyOTNuczhhZ2E0OWNmOCJ9.6IBMJR_o4Wl886nsWld7BA';
 
@@ -35,30 +33,20 @@ export class ClassMapBox {
         'data': this.pointsData,
       });
 
-      this.map.loadImage(`${MARKER_ICON_RED}`, (error, image) => {
-        this.map.addImage('marker-red', image);
+      this.map.addImage('marker-red', MAP_MARKER_DEFAULT);
 
-        this.map.addLayer({
-          'id': 'problems',
-          'type': 'symbol',
-          'source': 'problemsjson',
-          'layout': {
-            'icon-image': 'marker-red',
-            'icon-size': 0.25,
-            'icon-padding': 10,
-            'icon-anchor': 'bottom',
-          },
-        });
+      this.map.addImage('marker-green', MAP_MARKER_SELECT);
+
+      this.map.addLayer({
+        'id': 'problems',
+        'type': 'symbol',
+        'source': 'problemsjson',
+        'layout': {
+          'icon-image': 'marker-red',
+          'icon-padding': 10,
+          'icon-anchor': 'bottom',
+        },
       });
-
-      this.map.loadImage(`${MARKER_ICON_BLUE}`, (error, image) => {
-        this.map.addImage('marker-blue', image);
-      });
-
-      this.map.loadImage(`${MARKER_ICON_GREEN}`, (error, image) => {
-        this.map.addImage('marker-green', image);
-      });
-
 
       axios.post('//mc.yarche.work/map/ajax-get-points/', {})
           .then(({data}) => {
@@ -90,8 +78,6 @@ export class ClassMapBox {
             }
           });
 
-      this.updateLayout();
-
       this.map.on('click', 'problems', (e) => {
         this.map.flyTo({center: e.features[0].geometry.coordinates});
       });
@@ -117,9 +103,13 @@ export class ClassMapBox {
       return;
     }
 
-    this.newPoint = new mapboxgl.Marker({
-      draggable: true,
-    })
+    this.newPoint = new mapboxgl.Marker(
+        MAP_MARKER_NEW,
+        {
+          draggable: true,
+          anchor: 'bottom',
+        }
+    )
         .setLngLat([30.6, 50.43])
         .addTo(this.map);
   }
@@ -145,7 +135,7 @@ export class ClassMapBox {
 
   initClickEvent(nameElement, messageElement) {
     this.map.on('click', 'problems', (e) => {
-      if ( e.features/length) {
+      if ( e.features.length) {
         const {name, message} = e.features[0].properties;
         if (undefined !== nameElement && undefined !== name) {
           nameElement.value = name;

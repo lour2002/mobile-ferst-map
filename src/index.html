@@ -11,13 +11,17 @@
     <div class="o-interface">
         <div class="a-notice">Нажми на чекин, что бы  увидеть добавленую проблему или создайте новую,нажав на плюс</div>
         <div class="o-interface__message">
-            <input type="text" name="name" id="js-name-text" class="a-input o-interface__nameInput" placeholder="Имя">
-            <input type="text" name="message" id="js-message-text" size="45" class="a-input o-interface__messageInput" placeholder="Описание проблемы">
-            <button id="js-add-problem">Добавить</button>
-            <div class="a-button -add o-interface__addPoint" id="js-add-point">+</div>
+            <input type="text" name="name" id="js-name-text" class="a-input o-interface__input" placeholder="Имя">
+            <input type="text" name="message" id="js-message-text" size="45" class="a-input o-interface__input" placeholder="Описание проблемы">
+            <button id="js-add-problem" class="a-button -addProblem">Добавить</button>
         </div>
         
     </div>
     <div class="a-map" id="mapbox"></div>
+    <div class="o-interface -bottom">
+        <div class="a-button -add o-interface__addPoint" id="js-add-point">
+            <span class="a-button__icon">+</span>
+        </div>
+    </div>
 </body>
 </html>
