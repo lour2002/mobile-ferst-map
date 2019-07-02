@@ -151,7 +151,10 @@ export class ClassMapBox {
           if (undefined !== ProblemInfo.nameElement && undefined !== name) {
             ProblemInfo.nameElement.value = name;
           }
-          if (undefined !== ProblemInfo.messageElement && undefined !== message) {
+          if (
+            undefined !== ProblemInfo.messageElement &&
+            undefined !== message
+          ) {
             ProblemInfo.messageElement.value = message;
           }
         }
