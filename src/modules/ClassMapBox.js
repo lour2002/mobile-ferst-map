@@ -53,7 +53,7 @@ export class ClassMapBox {
         },
       });
 
-      axios.post('//mc.yarche.work/map/ajax-get-points/', {})
+      axios.post('http://api.davay2019.com/ajax-get-points/', {})
           .then(({data}) => {
             if (Array.isArray(data.data)) {
               const points = data.data.map((point) => {

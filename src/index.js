@@ -36,7 +36,7 @@ window.onload = () => {
         message: ProblemInfo.messageElement.value,
       };
 
-      axios.post('//mc.yarche.work/map/ajax-add-point/', {
+      axios.post('http://api.davay2019.com/ajax-add-point/', {
         point,
       }).then(({data}) => {
         console.log(data);
