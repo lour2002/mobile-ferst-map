@@ -1,4 +1,5 @@
 import mapboxgl from 'mapbox-gl';
+import {ClassProblemInfo} from './ClassProblemInfo';
 import {
   MAP_MARKER_DEFAULT,
   MAP_MARKER_SELECT,
@@ -140,18 +141,22 @@ export class ClassMapBox {
     this.newPoint = {};
   }
 
-  initClickEvent(nameElement, messageElement) {
-    this.map.on('click', 'problems', (e) => {
-      if ( e.features.length) {
-        const {name, message} = e.features[0].properties;
-        if (undefined !== nameElement && undefined !== name) {
-          nameElement.value = name;
+  initClickEvent(ProblemInfo) {
+    if (ProblemInfo instanceof ClassProblemInfo) {
+      this.map.on('click', 'problems', (e) => {
+        if ( e.features.length) {
+          ProblemInfo.showMessageInfo();
+          ProblemInfo.addButtonElement.style.display = 'none';
+          const {name, message} = e.features[0].properties;
+          if (undefined !== ProblemInfo.nameElement && undefined !== name) {
+            ProblemInfo.nameElement.value = name;
+          }
+          if (undefined !== ProblemInfo.messageElement && undefined !== message) {
+            ProblemInfo.messageElement.value = message;
+          }
         }
-        if (undefined !== messageElement && undefined !== message) {
-          messageElement.value = message;
-        }
-      }
-    });
+      });
+    }
   }
   updateLayout() {
     if (this.map.getSource('problemsjson')) {

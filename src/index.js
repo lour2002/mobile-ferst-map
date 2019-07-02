@@ -51,5 +51,5 @@ window.onload = () => {
     }
   });
 
-  Map.initClickEvent(ProblemInfo.nameElement, ProblemInfo.messageElement);
+  Map.initClickEvent(ProblemInfo);
 };
