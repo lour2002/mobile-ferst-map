@@ -45,6 +45,9 @@ html,body {
     &-button{
         cursor: pointer;
         user-select: none;
+        &:disabled{
+            cursor: default;
+        }
         &.-add{
             width: 2.5rem;
             height: 2.5rem;
@@ -59,13 +62,15 @@ html,body {
             }
         }
         &.-addProblem{
+            margin: 0.5rem 0 0 0.25rem;
+            font-family: inherit;
             background: $green;
             color: white;
             border: none;
             padding: 0.25rem 0.5rem;
             border-radius: 4px;
             
-            &:hover,:active{
+            &:hover:not(:disabled),:active:not(:disabled){
                 background: darken($green, 10%);
                 border: none;
                 outline: none

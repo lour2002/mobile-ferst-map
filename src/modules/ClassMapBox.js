@@ -1,5 +1,9 @@
 import mapboxgl from 'mapbox-gl';
-import {MAP_MARKER_DEFAULT, MAP_MARKER_SELECT, MAP_MARKER_NEW} from '../constants';
+import {
+  MAP_MARKER_DEFAULT,
+  MAP_MARKER_SELECT,
+  MAP_MARKER_NEW,
+} from '../constants';
 // eslint-disable-next-line max-len
 mapboxgl.accessToken = 'pk.eyJ1IjoibG91cjIwMDIiLCJhIjoiY2p4ajV2dTJjMXgyOTNuczhhZ2E0OWNmOCJ9.6IBMJR_o4Wl886nsWld7BA';
 
@@ -50,8 +54,8 @@ export class ClassMapBox {
 
       axios.post('//mc.yarche.work/map/ajax-get-points/', {})
           .then(({data}) => {
-            if (Array.isArray(data.points)) {
-              const points = data.points.map((point) => {
+            if (Array.isArray(data.data)) {
+              const points = data.data.map((point) => {
                 const {coordinates, name, message} = point.data;
                 return {
                   coordinates,
@@ -93,6 +97,9 @@ export class ClassMapBox {
     });
   }
   get newPointLngLat() {
+    if (!(this.newPoint instanceof mapboxgl.Marker)) {
+      return [];
+    }
     const lngLat = this.newPoint.getLngLat();
     console.log(lngLat);
     return [lngLat.lng, lngLat.lat];

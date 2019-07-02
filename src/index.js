@@ -46,6 +46,8 @@ window.onload = () => {
         name: ProblemInfo.nameElement.value,
         message: ProblemInfo.messageElement.value,
       });
+
+      ProblemInfo.reset();
     }
   });
 
