@@ -20,6 +20,7 @@ html,body {
         outline: none;
         font-family: 'Gilroy', sans-serif;
         font-weight: 600;
+        font-size: 1rem;
         padding: 0.5em;
         &:hover{
             border: none;
@@ -88,6 +89,10 @@ html,body {
 /* Molecules */
 /* Organisms*/
 .o{
+    &-container{
+        position: relative;
+        height: 500px;
+    }
     &-interface{
         position: absolute;
         z-index: 20;

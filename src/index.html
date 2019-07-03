@@ -8,19 +8,22 @@
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
 </head>
 <body>
-    <div class="o-interface">
-        <div class="a-notice">Нажми на чекин, что бы  увидеть добавленую проблему или создайте новую,нажав на плюс</div>
-        <div class="o-interface__message" id="js-message-info">
-            <input type="text" name="name" id="js-name-text" class="a-input o-interface__input" placeholder="Имя">
-            <input type="text" name="message" id="js-message-text" size="45" class="a-input o-interface__input" placeholder="Описание проблемы">
-            <button id="js-add-problem" class="a-button -addProblem">Добавить</button>
+    <div class="o-container">
+        <div class="o-interface">
+            <!-- <div class="a-notice">Нажми на чекин, что бы  увидеть добавленую проблему или создайте новую,нажав на плюс</div> -->
+            <div id="js-message-info">
+                <div class="o-interface__message">
+                    <input type="text" name="name" id="js-name-text" class="a-input o-interface__input" placeholder="Имя">
+                    <input type="text" name="message" id="js-message-text" class="a-input o-interface__input" placeholder="Описание проблемы">
+                    <button id="js-add-problem" class="a-button -addProblem">Добавить</button>
+                </div>
+            </div>
         </div>
-        
-    </div>
-    <div class="a-map" id="mapbox"></div>
-    <div class="o-interface -bottom">
-        <div class="a-button -add o-interface__addPoint" id="js-add-point">
-            <span class="a-button__icon">+</span>
+        <div class="a-map" id="mapbox"></div>
+        <div class="o-interface -bottom">
+            <div class="a-button -add o-interface__addPoint" id="js-add-point">
+                <span class="a-button__icon">+</span>
+            </div>
         </div>
     </div>
 </body>

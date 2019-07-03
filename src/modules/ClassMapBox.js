@@ -147,6 +147,11 @@ export class ClassMapBox {
     if (ProblemInfo instanceof ClassProblemInfo) {
       this.map.on('click', 'problems', (e) => {
         if ( e.features.length) {
+          if (this.newPoint instanceof mapboxgl.Marker) {
+            this.newPoint.remove();
+            this.newPoint = {};
+          }
+
           ProblemInfo.showMessageInfo();
           ProblemInfo.addButtonElement.style.display = 'none';
           const {name, message} = e.features[0].properties;
