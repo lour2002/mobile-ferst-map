@@ -152,9 +152,11 @@ export class ClassMapBox {
             this.newPoint = {};
           }
 
-          ProblemInfo.showMessageInfo();
           ProblemInfo.addButtonElement.style.display = 'none';
+          ProblemInfo.disabled();
+          ProblemInfo.showMessageInfo();
           const {name, message} = e.features[0].properties;
+
           if (undefined !== ProblemInfo.nameElement && undefined !== name) {
             ProblemInfo.nameElement.value = name;
           }
