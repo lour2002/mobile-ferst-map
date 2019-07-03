@@ -151,20 +151,18 @@ export class ClassMapBox {
             this.newPoint.remove();
             this.newPoint = {};
           }
-
-          ProblemInfo.addButtonElement.style.display = 'none';
-          ProblemInfo.disabled();
+          ProblemInfo.disabledEditMode();
           ProblemInfo.showMessageInfo();
           const {name, message} = e.features[0].properties;
 
           if (undefined !== ProblemInfo.nameElement && undefined !== name) {
-            ProblemInfo.nameElement.value = name;
+            ProblemInfo.nameElement.innerText = name;
           }
           if (
             undefined !== ProblemInfo.messageElement &&
             undefined !== message
           ) {
-            ProblemInfo.messageElement.value = message;
+            ProblemInfo.messageElement.innerText = message;
           }
         }
       });

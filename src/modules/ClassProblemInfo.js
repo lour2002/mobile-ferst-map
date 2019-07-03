@@ -2,20 +2,25 @@ export class ClassProblemInfo {
   constructor() {
     this.messageInfo = document.getElementById('js-message-info');
     this.nameElement = document.getElementById('js-name-text');
+    this.nameInput = document.getElementById('js-name-input');
     this.messageElement = document.getElementById('js-message-text');
+    this.messageInput = document.getElementById('js-message-input');
     this.addButtonElement = document.getElementById('js-add-problem');
   }
-  disabled() {
+  disabledEditMode() {
     this.hideMessageInfo();
-    this.nameElement.disabled = true;
-    this.messageElement.disabled = true;
-    this.addButtonElement.disabled = true;
+    this.nameElement.style.display = 'block';
+    this.nameInput.style.display = 'none';
+    this.messageElement.style.display = 'block';
+    this.messageInput.style.display = 'none';
+    this.addButtonElement.style.display = 'none';
   }
-  enabled() {
+  enabledEditMode() {
     this.showMessageInfo();
-    this.nameElement.disabled = false;
-    this.messageElement.disabled = false;
-    this.addButtonElement.disabled = false;
+    this.nameElement.style.display = 'none';
+    this.nameInput.style.display = 'block';
+    this.messageElement.style.display = 'none';
+    this.messageInput.style.display = 'block';
     this.addButtonElement.style.display = 'block';
   }
   showMessageInfo() {
@@ -25,7 +30,7 @@ export class ClassProblemInfo {
     this.messageInfo.style.display = 'none';
   }
   reset() {
-    this.nameElement.value = '';
-    this.messageElement.value = '';
+    this.nameInput.value = '';
+    this.messageInput.value = '';
   }
 }

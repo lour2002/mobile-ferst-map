@@ -18,22 +18,24 @@ window.onload = () => {
   const Map = new ClassMapBox('mapbox');
   const ProblemInfo = new ClassProblemInfo();
 
-  ProblemInfo.disabled();
+  ProblemInfo.hideMessageInfo();
 
   document.getElementById('js-add-point').addEventListener('click', () => {
     ProblemInfo.reset();
-    ProblemInfo.enabled();
+    ProblemInfo.enabledEditMode();
     Map.addPoint();
   });
+
+
   document.getElementById('js-add-problem').addEventListener('click', () => {
-    ProblemInfo.disabled();
+    ProblemInfo.disabledEditMode();
     const LngLat = Map.newPointLngLat;
 
     if (LngLat.length) {
       const point = {
         coordinates: LngLat,
-        name: ProblemInfo.nameElement.value,
-        message: ProblemInfo.messageElement.value,
+        name: ProblemInfo.nameInput.value,
+        message: ProblemInfo.messageInput.value,
       };
 
       axios.post('http://api.davay2019.com/ajax-add-point/', {
@@ -43,8 +45,8 @@ window.onload = () => {
       });
 
       Map.addNewPointToLayer({
-        name: ProblemInfo.nameElement.value,
-        message: ProblemInfo.messageElement.value,
+        name: ProblemInfo.nameInput.value,
+        message: ProblemInfo.messageInput.value,
       });
 
       ProblemInfo.reset();
