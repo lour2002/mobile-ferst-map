@@ -111,6 +111,8 @@ export class ClassMapBox {
       return;
     }
 
+    const center = this.map.getCenter().wrap();
+
     this.newPoint = new mapboxgl.Marker(
         MAP_MARKER_NEW,
         {
@@ -118,7 +120,7 @@ export class ClassMapBox {
           anchor: 'bottom',
         }
     )
-        .setLngLat([30.6, 50.43])
+        .setLngLat(center)
         .addTo(this.map);
   }
 
