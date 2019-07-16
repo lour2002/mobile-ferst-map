@@ -35,6 +35,9 @@ export class ClassMapBox {
 
       this.map.addSource('problemsjson', {
         'type': 'geojson',
+        'cluster': true,
+        'clusterMaxZoom': 14,
+        'clusterRadius': 50,
         'data': this.pointsData,
       });
 
@@ -43,14 +46,82 @@ export class ClassMapBox {
       this.map.addImage('marker-green', MAP_MARKER_SELECT);
 
       this.map.addLayer({
-        'id': 'problems',
+        'id': 'clusters',
+        // 'type': 'symbol',
+        'type': 'circle',
+        'source': 'problemsjson',
+        'filter': ['has', 'point_count'],
+        // 'layout': {
+        //   'icon-image': 'marker-red',
+        //   'icon-padding': 10,
+        //   'icon-anchor': 'bottom',
+        // },
+        'paint': {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            '#fae232',
+            100,
+            '#f1f075',
+            750,
+            '#f28cb1',
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20,
+            100,
+            30,
+            750,
+            40,
+          ],
+        },
+      });
+
+      this.map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'problemsjson',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 12,
+        },
+      });
+
+      this.map.addLayer({
+        'id': 'unclustered-point',
         'type': 'symbol',
         'source': 'problemsjson',
+        'filter': ['!', ['has', 'point_count']],
         'layout': {
           'icon-image': 'marker-red',
           'icon-padding': 10,
           'icon-anchor': 'bottom',
         },
+      });
+
+      this.map.on('click', 'clusters', (e) => {
+        const features = this.map.queryRenderedFeatures(
+            e.point,
+            {layers: ['clusters']}
+        );
+
+        const clusterId = features[0].properties.cluster_id;
+
+        this.map.getSource('problemsjson').getClusterExpansionZoom(
+            clusterId,
+            (err, zoom) => {
+              if (err) {
+                return;
+              }
+
+              this.map.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom + 2,
+              });
+            });
       });
 
       axios.post('http://api.davay2019.com/ajax-get-points/', {})
@@ -83,16 +154,23 @@ export class ClassMapBox {
             }
           });
 
-      this.map.on('click', 'problems', (e) => {
+      this.map.on('mouseenter', 'clusters', () => {
+        this.map.getCanvas().style.cursor = 'pointer';
+      });
+      this.map.on('mouseleave', 'clusters', () => {
+        this.map.getCanvas().style.cursor = '';
+      });
+
+      this.map.on('click', 'unclustered-point', (e) => {
         this.map.flyTo({center: e.features[0].geometry.coordinates});
       });
 
-      this.map.on('mouseenter', 'problems', () => {
+      this.map.on('mouseenter', 'unclustered-point', () => {
         this.map.getCanvas().style.cursor = 'pointer';
       });
 
       // Change it back to a pointer when it leaves.
-      this.map.on('mouseleave', 'problems', () => {
+      this.map.on('mouseleave', 'unclustered-point', () => {
         this.map.getCanvas().style.cursor = '';
       });
     });
@@ -145,7 +223,7 @@ export class ClassMapBox {
 
   initClickEvent(ProblemInfo) {
     if (ProblemInfo instanceof ClassProblemInfo) {
-      this.map.on('click', 'problems', (e) => {
+      this.map.on('click', 'unclustered-point', (e) => {
         if ( e.features.length) {
           this.resetNewPoint();
           ProblemInfo.disabledEditMode();
