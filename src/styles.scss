@@ -1,5 +1,14 @@
 @import './fonts/stylesheet.css';
 
+%close-icon {
+    position: absolute;
+    left: 9px;
+    content: '';
+    height: 20px;
+    width: 2px;
+    background-color: #333;
+}
+
 $red: #EF3340;
 $blue: #0075B3;
 $green: #009874;
@@ -50,10 +59,27 @@ html,body {
         &:disabled{
             cursor: default;
         }
+        &.-close{
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+            padding: 0;
+            position: relative;
+            &:hover{
+                opacity: 1;
+            }
+            &:after{
+                @extend %close-icon;
+                transform: rotate(45deg);
+            }
+            &:before{
+                @extend %close-icon;
+                transform: rotate(-45deg);
+            }
+        }
         &.-add{
-            width: 2.5rem;
             height: 2.5rem;
-            border-radius: 50%;
+            border-radius: 2.5rem;
             color: $red;
             background: $yellow;
             text-align: center;
@@ -80,10 +106,7 @@ html,body {
 
 
         }
-        &__icon{
-            margin: auto;
-            font-size: 2rem;
-        }
+        
     }
 }
 /* Molecules */
@@ -113,6 +136,16 @@ html,body {
         &__addPoint{
             float: right;
             margin: 1rem;
+        }
+        &__addPointText{
+            margin: auto;
+            padding: 0.5rem 1rem;
+        }
+        &__close{
+            flex-basis: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
         }
     }
 }

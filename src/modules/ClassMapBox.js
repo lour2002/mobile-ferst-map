@@ -147,10 +147,7 @@ export class ClassMapBox {
     if (ProblemInfo instanceof ClassProblemInfo) {
       this.map.on('click', 'problems', (e) => {
         if ( e.features.length) {
-          if (this.newPoint instanceof mapboxgl.Marker) {
-            this.newPoint.remove();
-            this.newPoint = {};
-          }
+          this.resetNewPoint();
           ProblemInfo.disabledEditMode();
           ProblemInfo.showMessageInfo();
           const {name, message} = e.features[0].properties;
@@ -166,6 +163,12 @@ export class ClassMapBox {
           }
         }
       });
+    }
+  }
+  resetNewPoint() {
+    if (this.newPoint instanceof mapboxgl.Marker) {
+      this.newPoint.remove();
+      this.newPoint = {};
     }
   }
   updateLayout() {

@@ -1,3 +1,5 @@
+import {ClassMapBox} from './ClassMapBox';
+
 export class ClassProblemInfo {
   constructor() {
     this.messageInfo = document.getElementById('js-message-info');
@@ -32,5 +34,15 @@ export class ClassProblemInfo {
   reset() {
     this.nameInput.value = '';
     this.messageInput.value = '';
+  }
+
+  initClickCloseInfo(Map) {
+    document.getElementById('js-close-info').addEventListener('click', () => {
+      this.hideMessageInfo();
+      this.reset();
+      if (Map instanceof ClassMapBox) {
+        Map.resetNewPoint();
+      }
+    });
   }
 }

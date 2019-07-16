@@ -26,7 +26,6 @@ window.onload = () => {
     Map.addPoint();
   });
 
-
   document.getElementById('js-add-problem').addEventListener('click', () => {
     ProblemInfo.disabledEditMode();
     const LngLat = Map.newPointLngLat;
@@ -54,4 +53,5 @@ window.onload = () => {
   });
 
   Map.initClickEvent(ProblemInfo);
+  ProblemInfo.initClickCloseInfo(Map);
 };
