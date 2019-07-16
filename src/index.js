@@ -27,10 +27,15 @@ window.onload = () => {
   });
 
   document.getElementById('js-add-problem').addEventListener('click', () => {
-    ProblemInfo.disabledEditMode();
     const LngLat = Map.newPointLngLat;
 
-    if (LngLat.length) {
+    if (
+      LngLat.length &&
+      ProblemInfo.nameInput.value !== '' &&
+      ProblemInfo.messageInput.value !== ''
+    ) {
+      ProblemInfo.disabledEditMode();
+
       const point = {
         coordinates: LngLat,
         name: ProblemInfo.nameInput.value,
