@@ -29,6 +29,9 @@ window.onload = () => {
   document.getElementById('js-add-problem').addEventListener('click', () => {
     const LngLat = Map.newPointLngLat;
 
+    ProblemInfo.checkError(ProblemInfo.nameInput);
+    ProblemInfo.checkError(ProblemInfo.messageInput);
+
     if (
       LngLat.length &&
       ProblemInfo.nameInput.value !== '' &&

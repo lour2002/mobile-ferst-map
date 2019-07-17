@@ -1,19 +1,5 @@
 import {ClassMapBox} from './ClassMapBox';
 
-const checkError = function(ele) {
-  const classList = Array.prototype.slice.call(ele.classList);
-
-  if ('' === ele.value) {
-    classList.push('-error');
-  } else {
-    const index = classList.indexOf('-error');
-    if (-1 !== index) {
-      classList.splice(index, 1);
-    }
-  }
-
-  ele.className = classList.join(' ');
-};
 
 export class ClassProblemInfo {
   constructor() {
@@ -23,14 +9,6 @@ export class ClassProblemInfo {
     this.messageElement = document.getElementById('js-message-text');
     this.messageInput = document.getElementById('js-message-input');
     this.addButtonElement = document.getElementById('js-add-problem');
-
-    this.nameInput.addEventListener('input', () => {
-      checkError(this.nameInput);
-    });
-
-    this.messageInput.addEventListener('input', () => {
-      checkError(this.messageInput);
-    });
   }
   disabledEditMode() {
     this.hideMessageInfo();
@@ -58,6 +36,21 @@ export class ClassProblemInfo {
     this.nameInput.value = '';
     this.messageInput.value = '';
   }
+
+  checkError(ele) {
+    const classList = Array.prototype.slice.call(ele.classList);
+
+    if ('' === ele.value) {
+      classList.push('-error');
+    } else {
+      const index = classList.indexOf('-error');
+      if (-1 !== index) {
+        classList.splice(index, 1);
+      }
+    }
+
+    ele.className = classList.join(' ');
+  };
 
   initClickCloseInfo(Map) {
     document.getElementById('js-close-info').addEventListener('click', () => {
